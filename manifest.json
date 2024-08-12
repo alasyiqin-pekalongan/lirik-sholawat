@@ -1,0 +1,21 @@
+{
+    "name":"AA Media",
+    "start_url":".",
+    "display":"standalone",
+    "theme_color":"#010310",
+    "background_color":"#010310",
+    "icons":[
+      {
+      "src":"aamedia.png",
+      "type":"image/png",
+      "sizes":"192x192"
+      },
+      {
+      "src":"aamedia.png",
+      "type":"image/png",
+      "sizes":"512x512",
+      "purpore":"maskable"
+      }
+      
+      ]
+  }
