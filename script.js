@@ -205,3 +205,48 @@ window.addEventListener('appinstalled', () => {
     iosPopup.style.display = 'none';
 });
 
+// tombol dan waktu update
+function isThursdayAfternoon() {
+    const now = new Date();
+    const day = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 4 = Thursday
+    const hours = now.getHours();
+
+    // Cek jika hari ini adalah Kamis dan setelah jam 15:00
+    if (day === 4 && hours >= 15) {
+        return true;
+    }
+    return false;
+}
+
+function showUpdatePopupIfNeeded() {
+    const lastUpdate = localStorage.getItem('lastUpdate');
+    const now = new Date();
+
+    // Cek apakah aplikasi sudah diinstal
+    const isAppInstalled = window.matchMedia('(display-mode: standalone)').matches;
+
+    // Jika aplikasi sudah diinstal dan hari Kamis sore
+    if (isAppInstalled && isThursdayAfternoon()) {
+        if (!lastUpdate || new Date(lastUpdate).getTime() < now.setHours(0, 0, 0, 0)) {
+            // Jika belum update hari ini, tampilkan update popup
+            updatePopup.style.display = 'block';
+        }
+    }
+}
+
+// Saat tombol update di klik
+updateBtn.addEventListener('click', () => {
+    caches.keys().then(cacheNames => {
+        return Promise.all(
+            cacheNames.map(cache => {
+                return caches.delete(cache); // Hapus semua cache
+            })
+        );
+    }).then(() => {
+        localStorage.setItem('lastUpdate', new Date()); // Simpan waktu update terakhir di localStorage
+        updatePopup.style.display = 'none'; // Sembunyikan popup setelah update
+    });
+});
+
+// Cek apakah hari Kamis sore dan aplikasi sudah diinstal
+// showUpdatePopupIfNeeded();
