@@ -15,8 +15,39 @@
   </head>
   <body>
 
+    <!-- Notifikasi untuk Android -->
+    <div id="notif-popup">
+      <p>Untuk pengalaman terbaik, tambahkan aplikasi ini ke layar beranda Anda:</p>
+      <p>1. Tekan tombol <strong>Share</strong> di bawah.</p>
+      <p>2. Pilih <strong>Add to Home Screen</strong>.</p>
+      <button id="installBtn">Install Aplikasi</button>
+      <button class="close-popup">Tutup</button>
+  </div>
+
+  <!-- Notifikasi untuk iOS -->
+  <div id="ios-popup">
+      <p>Untuk pengalaman terbaik, tambahkan aplikasi ini ke layar beranda Anda:</p>
+      <p>1. Tekan tombol <strong>Share</strong> di bawah.</p>
+      <p>2. Pilih <strong>Add to Home Screen</strong>.</p>
+      <button class="close-popup">Tutup</button>
+  </div>
+
+  <!-- Popup Pembaruan -->
+  <div id="update-popup">
+      <p>Pembaruan tersedia untuk aplikasi ini. Harap perbarui untuk versi terbaru.</p>
+      <button id="updateBtn">Update Aplikasi</button>
+      <button class="close-popup">Tutup</button>
+  </div>
+
+
     <header id="home">
       <div class="navbar-nav">
+        <div class="run-teks">
+          <div class="marquee">
+            <span>CARA INSTALL, Klik Titik Tiga Di Pojok Kanan Atas, Lalu Tambahkan Ke Layar Beranda, lalu Install AA Media.</span>
+            <br><span>UPDATE SHOLAWAT SETIAP MALAM JUM'AT!!!. Cara Update List Sholawat Dengan Menghapus Cache Web ini, Dan Kemudian Reload Webnya.</span>
+          </div>
+        </div>
         <div class="nav-list">
           <div class="icon">
             <li><a href="#home"><img src="aamedia.png" alt="" /></a></li>
@@ -30,17 +61,18 @@
         </div>
       </div>
     </header>
-
-<section id="dasboard">
+    
+    <section id="dasboard">
       <div class="container">
         <div class="hero">
           <div class="logo">
             <div class="search-container">
               <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
-            <input type="text" id="search-input" placeholder="Search...">
-            <div id="searchResults" class="search-results"></div>
+              <input type="text" id="search-input" placeholder="Search...">
+              <div id="searchResults" class="search-results"></div>
             </div>
             <h1>List Sholawat</h1>
+            <button id="install-button"><img src="./open.svg" alt=""></button>
           </div>
           <div class="option">
             <a href="#assalamualaik">Assalamu'alaik</a>

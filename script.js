@@ -28,3 +28,172 @@ window.addEventListener('load', () => {
         }
     }
 });
+
+
+// // Button Install Mobile
+// let deferredPrompt;
+
+// window.addEventListener('beforeinstallprompt', (e) => {
+//     // Cegah prompt default muncul
+//     e.preventDefault();
+//     // Simpan event untuk dipicu nanti
+//     deferredPrompt = e;
+
+//     // Tampilkan tombol instalasi khusus di UI
+//     const installButton = document.getElementById('install-button');
+//     installButton.style.display = 'block';
+
+//     installButton.addEventListener('click', () => {
+//         // Sembunyikan tombol setelah diklik
+//         installButton.style.display = 'none';
+//         // Tampilkan prompt instalasi
+//         deferredPrompt.prompt();
+//         // Tunggu respon pengguna
+//         deferredPrompt.userChoice.then((choiceResult) => {
+//             if (choiceResult.outcome === 'accepted') {
+//                 console.log('User accepted the install prompt');
+//             } else {
+//                 console.log('User dismissed the install prompt');
+//             }
+//             deferredPrompt = null;
+//         });
+//     });
+// });
+
+
+// Fungsi untuk deteksi iPhone
+// function isIOS() {
+//     return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+// }
+
+// // Tampilkan pop-up jika perangkat adalah iOS
+// if (isIOS()) {
+//     // const popup = document.getElementById('ios-popup');
+//     popup.style.display = 'block'; // Tampilkan pop-up
+// }
+
+// Tutup pop-up saat tombol 'Tutup' diklik
+// document.getElementById('close-popup').addEventListener('click', function() {
+//     document.getElementById('notif-popup','ios-popup').style.display = 'none';
+// });
+
+// popup
+// const notifPopup = document.getElementById('notif-popup');
+// const iosPopup = document.getElementById('ios-popup');
+// const iosBtn = document.getElementById('ios-btn');
+// const notifBtn = document.getElementById('notif-btn');
+// const closeButtons = document.querySelectorAll('#close-popup');
+
+// // Menampilkan notif-popup pada awalnya
+// notifPopup.style.display = 'block';
+
+// // Ketika iosBtn diklik, notif-popup disembunyikan dan ios-popup ditampilkan
+// iosBtn.addEventListener('click', function () {
+//     notifPopup.style.display = 'none';
+//     iosPopup.style.display = 'block';
+// });
+
+// // Ketika notifBtn diklik, ios-popup disembunyikan dan notif-popup ditampilkan
+// notifBtn.addEventListener('click', function () {
+//     iosPopup.style.display = 'none';
+//     notifPopup.style.display = 'block';
+// });
+
+// // Ketika tombol tutup diklik, semua popup disembunyikan
+// closeButtons.forEach(button => {
+//     button.addEventListener('click', function () {
+//         notifPopup.style.display = 'none';
+//         iosPopup.style.display = 'none';
+//     });
+// });
+
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+const notifPopup = document.getElementById('notif-popup');
+const iosPopup = document.getElementById('ios-popup');
+const updatePopup = document.getElementById('update-popup');
+const closeButtons = document.querySelectorAll('.close-popup');
+const updateBtn = document.getElementById('updateBtn');
+
+// Deteksi platform Android atau iOS
+function detectPlatform() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Cek apakah sudah diinstall
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        return; // Aplikasi sudah terpasang, tidak perlu menampilkan popup
+    }
+
+    if (/android/i.test(userAgent)) {
+        notifPopup.style.display = 'block';
+    } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        iosPopup.style.display = 'block';
+    }
+}
+
+// Event listener untuk beforeinstallprompt
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'block';
+
+    installBtn.addEventListener('click', () => {
+        installBtn.style.display = 'none';
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            } else {
+                console.log('User dismissed the install prompt');
+            }
+            deferredPrompt = null;
+        });
+    });
+});
+
+// Tutup popup
+closeButtons.forEach(button => {
+    button.addEventListener('click', function () {
+        notifPopup.style.display = 'none';
+        iosPopup.style.display = 'none';
+        updatePopup.style.display = 'none';
+    });
+});
+
+// Event listener untuk update
+function checkForUpdates() {
+    // Simulasi deteksi pembaruan, jika ada file baru, update popup muncul
+    // Misalnya cek hash atau perubahan di server
+    const isUpdateAvailable = true; // Sesuaikan dengan logika update app kamu
+
+    if (isUpdateAvailable) {
+        updatePopup.style.display = 'block';
+    }
+}
+
+// Tombol update yang akan menghapus cache lama dan memasang yang baru
+updateBtn.addEventListener('click', () => {
+    caches.keys().then(cacheNames => {
+        return Promise.all(
+            cacheNames.map(cache => {
+                return caches.delete(cache); // Hapus semua cache
+            })
+        );
+    }).then(() => {
+        window.location.reload(); // Refresh halaman setelah cache dihapus
+    });
+});
+
+// Memanggil deteksi platform
+detectPlatform();
+
+// Memanggil pengecekan pembaruan
+checkForUpdates();
+
+// Event ketika PWA sudah terpasang
+window.addEventListener('appinstalled', () => {
+    console.log('Aplikasi sudah diinstal');
+    notifPopup.style.display = 'none';
+    iosPopup.style.display = 'none';
+});
+
