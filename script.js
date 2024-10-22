@@ -251,7 +251,6 @@
 // // Cek apakah hari Kamis sore dan aplikasi sudah diinstal
 // // showUpdatePopupIfNeeded();
 
-
     const installBtn = document.getElementById('install-btn'); // Tombol install
     const updateBtn = document.getElementById('update-btn'); // Tombol update
     const lastUpdateKey = 'lastUpdate'; // Key untuk menyimpan waktu update terakhir
@@ -293,6 +292,11 @@
     installBtn.addEventListener('click', () => {
         localStorage.setItem('isAppInstalled', 'true'); // Simpan status instalasi di localStorage
         installBtn.style.display = 'none'; // Sembunyikan tombol install setelah diinstall
+        
+        // Kirim pesan untuk caching files
+        if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: 'cache-files' });
+        }
     });
 
     // Event listener untuk tombol update
@@ -311,5 +315,3 @@
     window.addEventListener('load', () => {
         showInstallOrUpdateButtons(); // Tampilkan tombol yang sesuai saat halaman dimuat
     });
-
-        

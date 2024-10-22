@@ -1,14 +1,21 @@
 const cacheName = "aamedia";
 const preCache = ["./", "./style.css", "./script.js", "./ScheherazadeNew-Medium.ttf"];
 
+// Menghindari caching otomatis saat install
 self.addEventListener("install", (e) => {
   console.log("Service worker installed");
-  e.waitUntil(
+  // Di sini kita tidak melakukan caching otomatis
+});
+
+// Event listener untuk caching yang di-trigger oleh pengguna
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === 'cache-files') {
     (async () => {
       const cache = await caches.open(cacheName);
       await cache.addAll(preCache); // Cache all specified files
-    })()
-  );
+      console.log("Files cached successfully!");
+    })();
+  }
 });
 
 self.addEventListener("fetch", (e) => {
@@ -16,17 +23,17 @@ self.addEventListener("fetch", (e) => {
     (async () => {
       const cache = await caches.open(cacheName);
       const resCache = await cache.match(e.request);
-      
+
       if (resCache) return resCache;
-      
+
       try {
         const res = await fetch(e.request);
-        
+
         // Handle notifications for index.html updates
         if (e.request.url.endsWith('index.html')) {
           const oldLyrics = resCache ? await resCache.text() : '';
           const newLyrics = await res.clone().text();
-          
+
           if (oldLyrics !== newLyrics) {
             self.registration.showNotification('Ada Lirik Baru Ditambahkan!', {
               body: 'Kami Telah Menambahkan List Sholawat Baru, Silahkan Bisa Update!',
@@ -35,7 +42,7 @@ self.addEventListener("fetch", (e) => {
             });
           }
         }
-        
+
         cache.put(e.request, res.clone());
         return res;
       } catch (error) {
