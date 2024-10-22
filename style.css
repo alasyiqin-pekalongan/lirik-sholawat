@@ -56,12 +56,21 @@ header {
   margin: 0 220px;
 }
 
-#install-button, #update-btn {
-  /* display: none; */
-  background: transparent;
-  /* color: white; */
-  /* background-color: ; */
-  /* border-radius: 20px; */
+#install-btn {
+  display: block;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+}
+
+#install-btn img{
+  color: white;
+}
+
+.logo button:hover {
+  background-color: #0056b3;
 }
 
 /* Gaya pop-up */
