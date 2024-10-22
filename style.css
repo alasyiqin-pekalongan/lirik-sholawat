@@ -74,6 +74,33 @@ header {
   background-color: #0056b3;
 }
 
+#ios-popup {
+  display: block; 
+  position: fixed; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  background: #010310;
+  color: white; 
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px; 
+  z-index: 1000;
+}
+
+#close-popup {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#close-popup:hover {
+  background-color: #0056b3;
+}
+
 /* Gaya pop-up */
 /* #ios-popup, #notif-popup, #update-popup {
   display: none;
