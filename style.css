@@ -56,7 +56,7 @@ header {
   margin: 0 220px;
 }
 
-#install-button {
+#install-button, #update-btn {
   /* display: none; */
   background: transparent;
   /* color: white; */
@@ -65,7 +65,7 @@ header {
 }
 
 /* Gaya pop-up */
-#ios-popup, #notif-popup, #update-popup {
+/* #ios-popup, #notif-popup, #update-popup {
   display: none;
   visibility: hidden;
   position: fixed;
@@ -91,7 +91,7 @@ header {
 
 #ios-popup button:hover, #notif-popup button:hover, #update-popup button:hover {
   background-color: #0056b3;
-}
+} */
 
 .navbar-nav {
   justify-content: space-between;
