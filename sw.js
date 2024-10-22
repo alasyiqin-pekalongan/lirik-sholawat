@@ -6,7 +6,7 @@ self.addEventListener("install", (e) => {
   e.waitUntil(
     (async () => {
       const cache = await caches.open(cacheName);
-      await cache.addAll(preCache);
+      await cache.addAll(preCache); // Cache all specified files
     })()
   );
 });
@@ -14,51 +14,28 @@ self.addEventListener("install", (e) => {
 self.addEventListener("fetch", (e) => {
   e.respondWith(
     (async () => {
-      const clients = await self.clients.matchAll();
-      const isInstalled = clients.some(client => client.url.includes('display-mode=standalone'));
-
-      if (!isInstalled) {
-        return fetch(e.request);
-      }
-
       const cache = await caches.open(cacheName);
       const resCache = await cache.match(e.request);
       
-      if (resCache) {
-        return resCache;
-      }
-
+      if (resCache) return resCache;
+      
       try {
         const res = await fetch(e.request);
-
+        
+        // Handle notifications for index.html updates
         if (e.request.url.endsWith('index.html')) {
-          const oldContent = resCache ? await resCache.text() : '';
-          const newContent = await res.clone().text();
-
-          if (oldContent !== newContent) {
+          const oldLyrics = resCache ? await resCache.text() : '';
+          const newLyrics = await res.clone().text();
+          
+          if (oldLyrics !== newLyrics) {
             self.registration.showNotification('Ada Lirik Baru Ditambahkan!', {
               body: 'Kami Telah Menambahkan List Sholawat Baru, Silahkan Bisa Update!',
-              icon: './aamedia.png', 
-              badge: './badge.svg', 
-              image: './notifikasi.svg', 
-              vibrate: [200, 100, 200], 
-              actions: [
-                {
-                  action: 'open',
-                  title: 'Lihat',
-                  icon: './open.svg'
-                },
-                {
-                  action: 'close',
-                  title: 'Tutup',
-                  icon: './close.svg'
-                }
-              ],
+              icon: './aamedia.png', // Ensure this path is correct
               tag: 'update-notification'
             });
           }
         }
-
+        
         cache.put(e.request, res.clone());
         return res;
       } catch (error) {
