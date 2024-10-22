@@ -252,99 +252,91 @@
 // // showUpdatePopupIfNeeded();
 
 
-    const notifPopup = document.getElementById('notif-popup');
-    const iosPopup = document.getElementById('ios-popup');
-    const updatePopup = document.getElementById('update-popup');
-    const installBtn = document.getElementById('installBtn'); // Tombol install di notif-popup
-    const iosInstallBtn = document.getElementById('ios-install-btn'); // Tombol install di ios-popup
-    const updateBtn = document.getElementById('updateBtn'); // Tombol update di update-popup
-    const closePopupBtn = document.getElementById('close-popup');
+const notifPopup = document.getElementById('notif-popup');
+const iosPopup = document.getElementById('ios-popup');
+const updatePopup = document.getElementById('update-popup');
+const installBtn = document.getElementById('install-btn'); // Tombol install di notif-popup
+const iosInstallBtn = document.getElementById('ios-install-btn'); // Tombol install di ios-popup
+const updateBtn = document.getElementById('update-btn'); // Tombol update di update-popup
+const closePopupBtn = document.getElementById('close-popup');
 
-    // Deteksi apakah pengguna menggunakan Android atau iOS
-    const isAndroid = /android/i.test(navigator.userAgent);
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+// Deteksi apakah pengguna menggunakan Android atau iOS
+const isAndroid = /android/i.test(navigator.userAgent);
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
-    // Fungsi untuk cek apakah aplikasi sudah terinstall
-    function isAppInstalled() {
-        return window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('isAppInstalled') === 'true';
+// Fungsi untuk cek apakah aplikasi sudah terinstall
+function isAppInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('isAppInstalled') === 'true';
+}
+
+// Fungsi untuk menampilkan popup sesuai platform
+function showInstallPopup() {
+    if (!isAppInstalled()) {
+        if (isAndroid) {
+            notifPopup.style.display = 'block'; // Tampilkan notif-popup untuk Android
+        } else if (isIOS) {
+            iosPopup.style.display = 'block'; // Tampilkan ios-popup untuk iOS
+        }
+    } else {
+        notifPopup.style.display = 'none';
+        iosPopup.style.display = 'none';
     }
+}
 
-    // Fungsi untuk menyembunyikan popup jika aplikasi sudah terinstall
-    function showInstallPopup() {
-        if (!isAppInstalled()) {
-            if (isAndroid) {
-                notifPopup.style.display = 'block'; // Tampilkan notif-popup untuk Android
-            } else if (isIOS) {
-                iosPopup.style.display = 'block'; // Tampilkan ios-popup untuk iOS
-            }
-        } else {
-            notifPopup.style.display = 'none';
-            iosPopup.style.display = 'none';
+// Fungsi untuk mendeteksi Kamis sore dan menampilkan update popup
+function isThursdayAfternoon() {
+    const now = new Date();
+    const day = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 4 = Thursday
+    const hours = now.getHours();
+
+    // Cek jika hari ini adalah Kamis dan setelah jam 15:00
+    return (day === 4 && hours >= 15);
+}
+
+// Tampilkan update popup jika Kamis sore dan aplikasi sudah terinstall
+function showUpdatePopupIfNeeded() {
+    const lastUpdate = localStorage.getItem('lastUpdate');
+    const now = new Date();
+    const isAppInstalled = window.matchMedia('(display-mode: standalone)').matches;
+
+    if (isAppInstalled && isThursdayAfternoon()) {
+        if (!lastUpdate || new Date(lastUpdate).getTime() < now.setHours(0, 0, 0, 0)) {
+            updatePopup.style.display = 'block';
         }
     }
+}
 
-    // Fungsi untuk mendeteksi Kamis sore dan menampilkan update popup
-    function isThursdayAfternoon() {
-        const now = new Date();
-        const day = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 4 = Thursday
-        const hours = now.getHours();
+// Saat tombol install di Android atau iOS di klik
+installBtn.addEventListener('click', () => {
+    localStorage.setItem('isAppInstalled', 'true'); // Simpan status instalasi di localStorage
+    notifPopup.style.display = 'none'; // Sembunyikan notif-popup setelah diinstall
+});
 
-        // Cek jika hari ini adalah Kamis dan setelah jam 15:00
-        if (day === 4 && hours >= 15) {
-            return true;
-        }
-        return false;
-    }
+iosInstallBtn.addEventListener('click', () => {
+    localStorage.setItem('isAppInstalled', 'true'); // Simpan status instalasi di localStorage
+    iosPopup.style.display = 'none'; // Sembunyikan ios-popup setelah diinstall
+});
 
-    // Tampilkan update popup jika Kamis sore dan aplikasi sudah terinstal
-    function showUpdatePopupIfNeeded() {
-        const lastUpdate = localStorage.getItem('lastUpdate');
-        const now = new Date();
-
-        // Cek apakah aplikasi sudah diinstal
-        const isAppInstalled = window.matchMedia('(display-mode: standalone)').matches;
-
-        if (isAppInstalled && isThursdayAfternoon()) {
-            if (!lastUpdate || new Date(lastUpdate).getTime() < now.setHours(0, 0, 0, 0)) {
-                updatePopup.style.display = 'block';
-            }
-        }
-    }
-
-    // Saat tombol install di Android atau iOS di klik
-    installBtn.addEventListener('click', () => {
-        localStorage.setItem('isAppInstalled', 'true'); // Simpan status instalasi di localStorage
-        notifPopup.style.display = 'none'; // Sembunyikan notif-popup setelah diinstall
+// Saat tombol update di klik
+updateBtn.addEventListener('click', () => {
+    caches.keys().then(cacheNames => {
+        return Promise.all(
+            cacheNames.map(cache => caches.delete(cache)) // Hapus semua cache
+        );
+    }).then(() => {
+        localStorage.setItem('lastUpdate', new Date()); // Simpan waktu update terakhir di localStorage
+        updatePopup.style.display = 'none'; // Sembunyikan popup setelah update
     });
+});
 
-    iosInstallBtn.addEventListener('click', () => {
-        localStorage.setItem('isAppInstalled', 'true'); // Simpan status instalasi di localStorage
-        iosPopup.style.display = 'none'; // Sembunyikan ios-popup setelah diinstall
-    });
+// Event listener untuk menutup popup manual
+closePopupBtn.addEventListener('click', () => {
+    notifPopup.style.display = 'none'; // Sembunyikan notif-popup jika user menutup manual
+    iosPopup.style.display = 'none'; // Sembunyikan ios-popup
+});
 
-    // Saat tombol update di klik
-    updateBtn.addEventListener('click', () => {
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cache => {
-                    return caches.delete(cache); // Hapus semua cache
-                })
-            );
-        }).then(() => {
-            localStorage.setItem('lastUpdate', new Date()); // Simpan waktu update terakhir di localStorage
-            updatePopup.style.display = 'none'; // Sembunyikan popup setelah update
-        });
-    });
-
-    // Event listener untuk menutup popup manual
-    closePopupBtn.addEventListener('click', () => {
-        notifPopup.style.display = 'none'; // Sembunyikan notif-popup jika user menutup manual
-        iosPopup.style.display = 'none'; // Sembunyikan ios-popup
-    });
-
-    // Cek apakah aplikasi sudah diinstall saat halaman di-load dan tampilkan popup jika perlu
-    showInstallPopup();
-
-    // Cek apakah hari Kamis sore dan aplikasi sudah diinstall
-    showUpdatePopupIfNeeded();
-
+// Jalankan fungsi saat halaman di-load
+window.addEventListener('load', () => {
+    showInstallPopup(); // Tampilkan popup instalasi jika perlu
+    showUpdatePopupIfNeeded(); // Tampilkan popup update jika Kamis sore
+});
