@@ -172,7 +172,7 @@ closeButtons.forEach(button => {
 function checkForUpdates() {
     // Simulasi deteksi pembaruan, jika ada file baru, update popup muncul
     // Misalnya cek hash atau perubahan di server
-    const isUpdateAvailable = true; // Sesuaikan dengan logika update app kamu
+    // const isUpdateAvailable = false; // Sesuaikan dengan logika update app kamu
 
     if (isUpdateAvailable) {
         updatePopup.style.display = 'block';
