@@ -31,7 +31,7 @@ window.addEventListener('load', () => {
 
 
 let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
+const installBtn = document.getElementById('install-btn');
 
 // Event listener untuk menangkap beforeinstallprompt
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -39,8 +39,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     // Simpan event
     deferredPrompt = e;
-    // Tampilkan tombol install
-    installBtn.style.display = 'block';
 
     installBtn.addEventListener('click', () => {
         // Sembunyikan tombol install

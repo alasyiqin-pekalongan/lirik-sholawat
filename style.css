@@ -57,6 +57,7 @@ header {
 }
 
 #install-btn {
+  background: transparent;
   display: block;
   border: none;
   padding: 10px;
