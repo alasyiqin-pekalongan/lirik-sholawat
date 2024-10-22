@@ -83,7 +83,7 @@ function checkForThursdayAfternoon() {
   checkForThursdayAfternoon(); // Panggilan awal saat halaman dimuat
 
   // 3. Menangani ios-popup
-const iosPopupClosed = localStorage.getItem('ios-popup-closed');
+const iosPopupClosed = localStorage.getItem('close-popup-btn');
 if (!iosPopupClosed) {
   document.getElementById('ios-popup').style.display = 'block';
 }
