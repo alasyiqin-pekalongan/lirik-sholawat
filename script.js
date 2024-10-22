@@ -255,9 +255,9 @@
     const notifPopup = document.getElementById('notif-popup');
     const iosPopup = document.getElementById('ios-popup');
     const updatePopup = document.getElementById('update-popup');
-    const installBtn = document.getElementById('install-btn'); // Tombol install di notif-popup
+    const installBtn = document.getElementById('installBtn'); // Tombol install di notif-popup
     const iosInstallBtn = document.getElementById('ios-install-btn'); // Tombol install di ios-popup
-    const updateBtn = document.getElementById('update-btn'); // Tombol update di update-popup
+    const updateBtn = document.getElementById('updateBtn'); // Tombol update di update-popup
     const closePopupBtn = document.getElementById('close-popup');
 
     // Deteksi apakah pengguna menggunakan Android atau iOS
@@ -341,4 +341,10 @@
         notifPopup.style.display = 'none'; // Sembunyikan notif-popup jika user menutup manual
         iosPopup.style.display = 'none'; // Sembunyikan ios-popup
     });
+
+    // Cek apakah aplikasi sudah diinstall saat halaman di-load dan tampilkan popup jika perlu
+    showInstallPopup();
+
+    // Cek apakah hari Kamis sore dan aplikasi sudah diinstall
+    showUpdatePopupIfNeeded();
 
