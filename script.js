@@ -115,7 +115,6 @@ const updatePopup = document.getElementById('update-popup');
 const closeButtons = document.querySelectorAll('.close-popup');
 const updateBtn = document.getElementById('updateBtn');
 
-// Deteksi platform Android atau iOS
 function detectPlatform() {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -124,9 +123,18 @@ function detectPlatform() {
         return; // Aplikasi sudah terpasang, tidak perlu menampilkan popup
     }
 
+    // Deteksi Windows
+    if (/windows/i.test(userAgent)) {
+        console.log("Aplikasi dibuka di Windows, tidak menampilkan popup.");
+        return; // Tidak menampilkan popup jika di Windows
+    }
+
+    // Deteksi Android
     if (/android/i.test(userAgent)) {
         notifPopup.style.display = 'block';
-    } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    } 
+    // Deteksi iOS
+    else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
         iosPopup.style.display = 'block';
     }
 }
